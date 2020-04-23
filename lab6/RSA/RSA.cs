@@ -51,7 +51,7 @@ namespace lab6.RSA
 
             var d = CalcularD(Phe, e);
 
-            Llaves = $"(Llave Privada: {n}, {d}) y  (Llave Publica: {n}, {e})";
+            Llaves = $"(Llave Privada: {n}, {d})  y  (Llave Publica: {n}, {e})";
 
 
         }
