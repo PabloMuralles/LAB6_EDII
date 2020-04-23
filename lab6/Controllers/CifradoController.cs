@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace lab6.Controllers
 { 
@@ -13,11 +14,15 @@ namespace lab6.Controllers
 
         [HttpGet]
         [Route("cipher/getPublicKey")]
-        public ActionResult Insertar(int key)
+        public ActionResult<string> Insertar(int key)
         {
             if (ModelState.IsValid)
             {
-                RSA.RSA Llave = new RSA.RSA();
+                RSA.RSA Llaves = new RSA.RSA();
+                 
+                var json = JsonConvert.SerializeObject(Llaves.Llaves);
+                return json;
+
 
             }
             return BadRequest(ModelState);

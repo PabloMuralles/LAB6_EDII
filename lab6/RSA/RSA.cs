@@ -25,11 +25,15 @@ namespace lab6.RSA
 
         //    Console.WriteLine($"Llave Privada: {n}  , {e} ");
 
-        
 
-         
+        public string Llaves = string.Empty;
         public RSA()
         {
+            //var NumeroRandom = "24";
+            //var Numero = BigInteger.Parse(NumeroRandom);
+            //var prueba = EsPrimo(Numero);
+            
+
             var p = GenerarPQ();
 
             var q = GenerarPQ();
@@ -47,6 +51,7 @@ namespace lab6.RSA
 
             var d = CalcularD(Phe, e);
 
+            Llaves = $"(Llave Privada: {n}, {d}) y  (Llave Publica: {n}, {e})";
 
 
         }
@@ -82,20 +87,21 @@ namespace lab6.RSA
 
         private bool EsPrimo(BigInteger Number)
         {
-            var EsPrimo = true;
+            var Raiz = Math.Exp(BigInteger.Log(Number) / 2);
 
-            var Contador = 2;
-
-            while (EsPrimo && Contador < Number )
+            for (int i = 2; i < Raiz; i++)
             {
-                if (Number % Contador == 0)
+                if (Number % i == 0)
                 {
-                    EsPrimo = false;
-
+                    return false;
+                  
                 }
+
             }
-            return EsPrimo;
+            return true;
         }
+            
+        
      
         private  BigInteger CalcularD(BigInteger phe_, int e_)
         {
@@ -146,16 +152,22 @@ namespace lab6.RSA
 
             var NuevoNumero = phe;
 
-            while (contador < phe)
+          
+
+            while (contador < phe && MultiposPhe.Count < 10)
             {
                 while (NuevoNumero % contador == 0)
-                {
-
+                { 
                     if (!MultiposPhe.Contains(contador))
                     {
                         MultiposPhe.Add(contador);
                     }
                     NuevoNumero = NuevoNumero / contador;
+
+                }
+                if (NuevoNumero ==1 )
+                {
+                    break;
                 }
                 contador++;
             }
