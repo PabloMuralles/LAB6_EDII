@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Numerics;
+using System.Security.Cryptography;
 
 namespace lab6.RSA
 {
@@ -27,8 +28,17 @@ namespace lab6.RSA
         
 
          
-        public RSA(BigInteger p, BigInteger q)
+        public RSA()
         {
+            var p = GenerarPQ();
+
+            var q = GenerarPQ();
+
+            while (p==q)
+            {
+                q = GenerarPQ();
+            }
+
             var n = p * q;
 
             var Phe= (p - 1) * (q - 1);
@@ -41,6 +51,51 @@ namespace lab6.RSA
 
         }
 
+        private BigInteger GenerarPQ()
+        {
+            var NumeroRandom = string.Empty;
+            var Random = new Random();
+            var Numero = new BigInteger();
+
+            for (int i = 0; i < 6; i++)
+            {
+                NumeroRandom += Convert.ToString(Random.Next(0, 6));
+            }
+            Numero = BigInteger.Parse(NumeroRandom);
+             
+            while (!EsPrimo(Numero))
+            {
+                NumeroRandom = string.Empty;
+                for (int i = 0; i < 6; i++)
+                {
+                    NumeroRandom += Convert.ToString(Random.Next(0, 9));
+                }
+                Numero = BigInteger.Parse(NumeroRandom);
+            }
+
+
+
+            return Numero;
+             
+        }
+
+
+        private bool EsPrimo(BigInteger Number)
+        {
+            var EsPrimo = true;
+
+            var Contador = 2;
+
+            while (EsPrimo && Contador < Number )
+            {
+                if (Number % Contador == 0)
+                {
+                    EsPrimo = false;
+
+                }
+            }
+            return EsPrimo;
+        }
      
         private  BigInteger CalcularD(BigInteger phe_, int e_)
         {
