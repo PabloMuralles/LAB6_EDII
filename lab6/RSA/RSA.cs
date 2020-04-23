@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Numerics;
 
 namespace lab6.RSA
 {
     public class RSA
     {
-        int p = 13;
+        //int p = 13;
 
-        int q = 17;
+        //int q = 17;
 
         //var  n = p * q;
 
@@ -23,10 +24,27 @@ namespace lab6.RSA
 
         //    Console.WriteLine($"Llave Privada: {n}  , {e} ");
 
-     
-        private  int CalcularD(int phe_, int e_)
+        
+
+         
+        public RSA(BigInteger p, BigInteger q)
         {
-            var Matriz = new int[2, 2]
+            var n = p * q;
+
+            var Phe= (p - 1) * (q - 1);
+
+            var e = Coprimos(Phe, p, q);
+
+            var d = CalcularD(Phe, e);
+
+
+
+        }
+
+     
+        private  BigInteger CalcularD(BigInteger phe_, int e_)
+        {
+            var Matriz = new BigInteger[2, 2]
             {
                    { phe_,phe_ },
                    { e_,1 }
@@ -63,13 +81,13 @@ namespace lab6.RSA
         }
 
 
-        private int Coprimos(int phe, int p_, int q_)
+        private int Coprimos(BigInteger phe, BigInteger p_, BigInteger q_)
         {
             int contador = 2;
             bool CoprimoEncontrado = false;
-            int Coprimo = 0;
+            var Coprimo = 0;
 
-            var MultiposPhe = new List<int>();
+            var MultiposPhe = new List<BigInteger>();
 
             var NuevoNumero = phe;
 
@@ -86,13 +104,13 @@ namespace lab6.RSA
                 }
                 contador++;
             }
-            if (!MultiposPhe.Contains(p))
+            if (!MultiposPhe.Contains(p_))
             {
-                MultiposPhe.Add(p);
+                MultiposPhe.Add(p_);
             }
-            if (!MultiposPhe.Contains(q))
+            if (!MultiposPhe.Contains(q_))
             {
-                MultiposPhe.Add(q);
+                MultiposPhe.Add(q_);
             }
 
             var contador2 = 2;
