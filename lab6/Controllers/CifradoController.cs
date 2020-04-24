@@ -42,17 +42,35 @@ namespace lab6.Controllers
         //}
 
         [HttpPost]
-        [Route("cipher/caesar2")]
-        public async Task<IActionResult> PostCompressLZW(IFormFile file)
+        [Route("cipher/caesar2/{nombre}")]
+        public async Task<IActionResult> Cipher(IFormFile file , string nombre )
+        {
+            var filePath = Path.GetTempFileName();
+            if (file.Length > 0)
+                using (var stream = new FileStream(filePath, FileMode.Create)) 
+                    await file.CopyToAsync(stream);
+            RSA.Descifrar.Instance.CifrarDocumento(filePath, nombre);
+           
+
+
+            
+            return Ok();
+
+        }
+
+        [HttpPost]
+        [Route("Decipher/caesar2/{nombre}")]
+        public async Task<IActionResult> Decipher(IFormFile file, string nombre)
         {
             var filePath = Path.GetTempFileName();
             if (file.Length > 0)
                 using (var stream = new FileStream(filePath, FileMode.Create))
                     await file.CopyToAsync(stream);
-            var hola = RSA.Descifrar.Instance.DecifrarContraseña();
+            RSA.Descifrar.Instance.DescifrarDocumentos(filePath, nombre);
 
 
-            
+
+
             return Ok();
 
         }

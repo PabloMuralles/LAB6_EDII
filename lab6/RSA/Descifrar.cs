@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Numerics;
 using System.Text;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace lab6.RSA
 {
@@ -34,8 +35,24 @@ namespace lab6.RSA
             this.D = D;
              
         }
+        public void CifrarDocumento(string ruta, string nombre )
+        {
+            var contraseña = DecifrarContraseña();
 
-        public string DecifrarContraseña( )
+            Cesar.Cesar2.Instance.CifrarMensaje(nombre, ruta, contraseña);
+
+        }
+         
+
+        public void DescifrarDocumentos(string ruta, string nombre)
+        {
+            var contraseña = DecifrarContraseña();
+
+            Cesar.Cesar2.Instance.DecifrarMensaje(nombre, ruta, contraseña);
+
+        }
+
+        private string DecifrarContraseña( )
         {
 
             var contraseñacifrada = new List<byte>();

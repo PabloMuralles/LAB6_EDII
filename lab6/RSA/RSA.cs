@@ -1,30 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Numerics;
-using System.Security.Cryptography;
 
 namespace lab6.RSA
 {
     public class RSA
     {
-        //int p = 13;
-
-        //int q = 17;
-
-        //var  n = p * q;
-
-        //var fee = (p - 1) * (q - 1);
-
-        //var e = Coprimos(fee, p, q);
-
-        //var d = CalcularD(fee, e);
-
-        //Console.WriteLine($"Llave Publica: {n}  , {d} ");
-
-        //    Console.WriteLine($"Llave Privada: {n}  , {e} ");
-
 
         private BigInteger p;
         private BigInteger q;
@@ -32,15 +13,10 @@ namespace lab6.RSA
         public string Llaves = string.Empty;
         public RSA()
         {
-            //var NumeroRandom = "24";
-            //var Numero = BigInteger.Parse(NumeroRandom);
-            //var prueba = EsPrimo(Numero);
 
+            p = GenerarNumeroPrimoRandom();
 
-
-            //p = GenerarNumeroPrimoRandom();
-
-            //q = GenerarNumeroPrimoRandom();
+            q = GenerarNumeroPrimoRandom();
 
 
 
@@ -50,20 +26,16 @@ namespace lab6.RSA
                 q = GenerarNumeroPrimoRandom();
             }
 
-            //BigInteger p = new BigInteger(7);
-
-            //BigInteger q = new BigInteger(11);
-
-
-
+            //var p = new BigInteger(31);
+            //var q = new BigInteger(3);
 
             var n = p * q;
-             
-            var Phe= (p - 1) * (q - 1);
 
-            //var e = Coprimos(Phe, p, q);
+            var Phe = (p - 1) * (q - 1);
 
-            var e = 29;
+            var e = Coprimos(Phe, p, q);
+
+
 
             var d = CalcularD(Phe, e);
 
@@ -86,20 +58,20 @@ namespace lab6.RSA
 
 
 
-                e = Coprimos(Phe, p, q );
+                e = Coprimos(Phe, p, q);
                 d = CalcularD(Phe, e);
             }
 
-            //Llaves = $"RSA:    (Llave Privada: {n}, {d})  y  (Llave Publica: {n}, {e})";
+            Llaves = $"RSA: (Llave Publica: {n}, {e}) y (Llave Privada: {n}, {d}) , {p}, {q} ";
 
-            Llaves = $"RSA: Llave Publica: {n}, {e}  ";
+            //Llaves = $"RSA: Llave Publica: {n}, {e}  ";
 
             Descifrar.Instance.RecibirLlavePrivada(n, d);
 
 
         }
 
-         
+
 
 
 
@@ -108,7 +80,7 @@ namespace lab6.RSA
         {
             var Multiplicacion = BigInteger.Multiply(D, P);
             var Mod = BigInteger.ModPow(Multiplicacion, 1, PHE);
-            if (Mod==1)
+            if (Mod == 1)
             {
                 return true;
             }
@@ -120,13 +92,13 @@ namespace lab6.RSA
             var Random = new Random();
 
             var Number = new BigInteger(Random.Next(3, 50));
-        
+
             while (!EsPrimo(Number))
             {
                 Number = new BigInteger(Random.Next(3, 50));
-                     
+
             }
-             
+
             return Number;
 
         }
@@ -141,7 +113,7 @@ namespace lab6.RSA
                 NumeroRandom += Convert.ToString(Random.Next(0, 6));
             }
             Numero = BigInteger.Parse(NumeroRandom);
-             
+
             while (!EsPrimo(Numero))
             {
                 NumeroRandom = string.Empty;
@@ -155,10 +127,10 @@ namespace lab6.RSA
 
 
             return Numero;
-             
+
         }
-       
-       
+
+
 
 
 
@@ -172,7 +144,7 @@ namespace lab6.RSA
                 if (Number % i == 0)
                 {
                     return false;
-                  
+
                 }
 
             }
@@ -181,7 +153,7 @@ namespace lab6.RSA
 
 
         private bool EsPrimo(BigInteger Number)
-        { 
+        {
             for (int i = 2; i < Number; i++)
             {
                 if (Number % i == 0)
@@ -196,7 +168,7 @@ namespace lab6.RSA
 
 
 
-        private  BigInteger CalcularD(BigInteger phe_, int e_)
+        private BigInteger CalcularD(BigInteger phe_, int e_)
         {
             var Matriz = new BigInteger[2, 2]
             {
@@ -214,7 +186,7 @@ namespace lab6.RSA
 
                 if (NuevaPosicionB < 0)
                 {
-                    while (NuevaPosicionB < 0 )
+                    while (NuevaPosicionB < 0)
                     {
                         NuevaPosicionB += phe_;
                     }
@@ -252,12 +224,12 @@ namespace lab6.RSA
 
             var NuevoNumero = phe;
 
-          
+
 
             while (contador < phe && MultiposPhe.Count < 10)
             {
                 while (NuevoNumero % contador == 0)
-                { 
+                {
                     if (!MultiposPhe.Contains(contador))
                     {
                         MultiposPhe.Add(contador);
@@ -265,7 +237,7 @@ namespace lab6.RSA
                     NuevoNumero = NuevoNumero / contador;
 
                 }
-                if (NuevoNumero ==1 )
+                if (NuevoNumero == 1)
                 {
                     break;
                 }
@@ -306,7 +278,7 @@ namespace lab6.RSA
 
         }
 
-        
+
 
 
     }
