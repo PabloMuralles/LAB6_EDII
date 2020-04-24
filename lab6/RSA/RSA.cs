@@ -38,34 +38,39 @@ namespace lab6.RSA
 
 
 
-            p = GenerarNumeroPrimoRandom();
+            //p = GenerarNumeroPrimoRandom();
 
-            q = GenerarNumeroPrimoRandom();
+            //q = GenerarNumeroPrimoRandom();
 
- 
-           
+
+
             while (p == q || p * q > 255)
             {
                 p = GenerarNumeroPrimoRandom();
                 q = GenerarNumeroPrimoRandom();
             }
 
-            //BigInteger p = new BigInteger(5);
+            //BigInteger p = new BigInteger(7);
 
-            //BigInteger q = new BigInteger(7);
+            //BigInteger q = new BigInteger(11);
 
-   
-             
+
+
 
             var n = p * q;
              
             var Phe= (p - 1) * (q - 1);
 
-            var e = Coprimos(Phe, p, q);
+            //var e = Coprimos(Phe, p, q);
+
+            var e = 29;
 
             var d = CalcularD(Phe, e);
 
-            while (e == d )
+
+            var Prueva = ValidarNumeros(e, d, Phe);
+
+            while (Prueva == false || e == d)
             {
                 p = GenerarNumeroPrimoRandom();
                 q = GenerarNumeroPrimoRandom();
@@ -85,9 +90,29 @@ namespace lab6.RSA
                 d = CalcularD(Phe, e);
             }
 
-            Llaves = $"(Llave Privada: {n}, {d})  y  (Llave Publica: {n}, {e})";
+            //Llaves = $"RSA:    (Llave Privada: {n}, {d})  y  (Llave Publica: {n}, {e})";
+
+            Llaves = $"RSA: Llave Publica: {n}, {e}  ";
+
+            Descifrar.Instance.RecibirLlavePrivada(n, d);
 
 
+        }
+
+         
+
+
+
+
+        private bool ValidarNumeros(BigInteger P, BigInteger D, BigInteger PHE)
+        {
+            var Multiplicacion = BigInteger.Multiply(D, P);
+            var Mod = BigInteger.ModPow(Multiplicacion, 1, PHE);
+            if (Mod==1)
+            {
+                return true;
+            }
+            return false;
         }
 
         private BigInteger GenerarNumeroPrimoRandom()
@@ -204,6 +229,13 @@ namespace lab6.RSA
                 Matriz[1, 1] = NuevaPosicionB;
 
             }
+            //if (Matriz[1, 1] == e_ && Matriz[1, 0] == 1)
+            //{
+            //    var Posicion = Matriz[1, 1] + phe_;
+            //    Matriz[1, 1] = Posicion;
+
+            //}
+
 
             return Matriz[1, 1];
 
