@@ -15,7 +15,7 @@ namespace lab6.Controllers
 
         [HttpGet]
         [Route("cipher/getPublicKey")]
-        public ActionResult<string> Insertar(int key)
+        public ActionResult<string> Insertar( int key)
         {
             if (ModelState.IsValid)
             {
@@ -42,31 +42,38 @@ namespace lab6.Controllers
         //}
 
         [HttpPost]
-        [Route("cipher/caesar2/{nombre}")]
-        public async Task<IActionResult> Cipher(IFormFile file , string nombre )
+        [Route("cipher/caesar2")]
+        public ActionResult Cipher([FromBody] Informacion Info)
         {
-            var filePath = Path.GetTempFileName();
-            if (file.Length > 0)
-                using (var stream = new FileStream(filePath, FileMode.Create)) 
-                    await file.CopyToAsync(stream);
-            RSA.Descifrar.Instance.CifrarDocumento(filePath, nombre);
-           
+            if (ModelState.IsValid)
+            {
+              
+                RSA.Descifrar.Instance.CifrarDocumento(Info.RutaArchivo, Info.NombreArchivo, Info.RutaLlave);
+                return Ok();
+
+            }
+            return BadRequest(ModelState);
 
 
             
-            return Ok();
+     
 
         }
 
         [HttpPost]
-        [Route("Decipher/caesar2/{nombre}")]
-        public async Task<IActionResult> Decipher(IFormFile file, string nombre)
+        [Route("Decipher/caesar2")]
+        public ActionResult Decipher([FromBody] Informacion Info)
         {
-            var filePath = Path.GetTempFileName();
-            if (file.Length > 0)
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                    await file.CopyToAsync(stream);
-            RSA.Descifrar.Instance.DescifrarDocumentos(filePath, nombre);
+            if (ModelState.IsValid)
+            {
+
+                RSA.Descifrar.Instance.DescifrarDocumentos(Info.RutaArchivo, Info.NombreArchivo, Info.RutaLlave);
+
+                
+                return Ok();
+
+            }
+            return BadRequest(ModelState);
 
 
 

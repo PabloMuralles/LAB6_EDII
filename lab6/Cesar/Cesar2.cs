@@ -51,7 +51,7 @@ namespace lab6.Cesar
             diccionarioCifrado.Clear();
         }
         //se considera que en el Cifrado Cesar unicamente se tienen las letras del alfabeto, mayúsculas y minúsculas, y que no se toman en cuenta las tildes
-        private void generarDiccionarioOriginal()
+        public void generarDiccionarioOriginal()
         {
             if (diccionarioOriginalVacio)
             {
@@ -70,7 +70,7 @@ namespace lab6.Cesar
 
 
         }
-        private void generarDiccionarioCifrado(string clave)
+        public void generarDiccionarioCifrado(string clave)
         {
             var contadorDiccionario = 1;
             //se añade la clave al diccionario
@@ -95,7 +95,7 @@ namespace lab6.Cesar
                 }
             }
         }
-        private void ObtenerTextoArchivoOriginal(string archivoLeido)
+        public void ObtenerTextoArchivoOriginal(string archivoLeido)
         {
             var bufferLength = 10000;
             using (var stream = new FileStream(archivoLeido, FileMode.Open))
@@ -112,7 +112,7 @@ namespace lab6.Cesar
                 }
             }
         }
-        private void ObtenerTextoArchivoDecifrado(string archivoLeido)
+        public void ObtenerTextoArchivoDecifrado(string archivoLeido)
         {
             var bufferLength = 10000;
             var texto = string.Empty;
@@ -144,7 +144,6 @@ namespace lab6.Cesar
                 texto += receptorValorCifrado;
             }
 
-
             string CarpetaCompress = Environment.CurrentDirectory;
 
             if (!Directory.Exists(Path.Combine(CarpetaCompress, "CipherCesar2")))
@@ -153,12 +152,13 @@ namespace lab6.Cesar
             }
              
 
-            using (var writeStream = new FileStream(Path.Combine(CarpetaCompress, "CipherCesar2", $"{RutaUsuario}.text  "), FileMode.OpenOrCreate))
+            using (var writeStream = new FileStream(Path.Combine(CarpetaCompress, "CipherCesar2", $"{RutaUsuario}.txt  "), FileMode.OpenOrCreate))
             {
                 using (var writer = new BinaryWriter(writeStream))
                 {
                     writer.Seek(0, SeekOrigin.End);
                     writer.Write(System.Text.Encoding.Unicode.GetBytes(texto));
+
                 }
             }
         }
@@ -191,7 +191,7 @@ namespace lab6.Cesar
             }
 
 
-            using (var writeStream = new FileStream(Path.Combine(CarpetaCompress, "DecipherCesar2", $"{RutaUsuario}.text  "), FileMode.OpenOrCreate))
+            using (var writeStream = new FileStream(Path.Combine(CarpetaCompress, "DecipherCesar2", $"{RutaUsuario}.txt  "), FileMode.OpenOrCreate))
             {
                 using (var writer = new BinaryWriter(writeStream))
                 {

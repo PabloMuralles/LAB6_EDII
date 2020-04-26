@@ -35,31 +35,31 @@ namespace lab6.RSA
             this.D = D;
              
         }
-        public void CifrarDocumento(string ruta, string nombre )
+        public void CifrarDocumento(string ruta, string nombre, string rutallave)
         {
-            var contraseña = DecifrarContraseña();
+            var contraseña = DecifrarContraseña(rutallave);
 
             Cesar.Cesar2.Instance.CifrarMensaje(nombre, ruta, contraseña);
 
         }
          
 
-        public void DescifrarDocumentos(string ruta, string nombre)
+        public void DescifrarDocumentos(string ruta, string nombre, string rutallave)
         {
-            var contraseña = DecifrarContraseña();
+            var contraseña = DecifrarContraseña(rutallave);
 
             Cesar.Cesar2.Instance.DecifrarMensaje(nombre, ruta, contraseña);
 
         }
 
-        private string DecifrarContraseña( )
+        private string DecifrarContraseña(string ruta)
         {
 
             var contraseñacifrada = new List<byte>();
              
-            string Ruta = @"c:\Temp";
+  
             
-            using (var streamwriter = new FileStream(Path.Combine(Ruta, $"Contraseña.txt"), FileMode.Open))
+            using (var streamwriter = new FileStream(ruta, FileMode.Open))
             {
                 using (var reader = new  BinaryReader(streamwriter))
                 {
@@ -79,6 +79,7 @@ namespace lab6.RSA
 
 
             var ClaveDescifrada = string.Empty;
+            var ClaveDescifradaBytes = new List<int>();
             foreach (var item in contraseñacifrada)
             {
                 BigInteger NumeroCaracter = new BigInteger(item);
@@ -89,6 +90,7 @@ namespace lab6.RSA
                 {
                     INT += Convert.ToInt32(item2);
                 }
+                ClaveDescifradaBytes.Add(INT);
                 var NuevoCaracter = Convert.ToString(Convert.ToChar(Convert.ToByte(INT)));
                 ClaveDescifrada += NuevoCaracter;
             }
