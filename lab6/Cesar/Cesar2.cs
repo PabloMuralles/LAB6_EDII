@@ -17,8 +17,8 @@ namespace lab6.Cesar
                 return _instance;
             }
         }
-        static Dictionary<string, int> diccionarioOriginal = new Dictionary<string, int>();
-        static Dictionary<string, int> diccionarioCifrado = new Dictionary<string, int>();
+        static Dictionary<int, int> diccionarioOriginal = new Dictionary<int, int>();
+        static Dictionary<int, int> diccionarioCifrado = new Dictionary<int, int>();
         string RutaUsuario = string.Empty;
         static bool diccionarioOriginalVacio = true;
         /// <summary>
@@ -50,21 +50,30 @@ namespace lab6.Cesar
             ObtenerTextoArchivoDecifrado(ArchivoLeido);
             diccionarioCifrado.Clear();
         }
-        //se considera que en el Cifrado Cesar unicamente se tienen las letras del alfabeto, mayúsculas y minúsculas, y que no se toman en cuenta las tildes
+
+
         public void generarDiccionarioOriginal()
         {
             if (diccionarioOriginalVacio)
             {
-                var valorMayusculas = 32;
+
                 var contadorDiccionario = 1;
 
-                for (int i = 0; i < 256; i++)
+                for (int i = 65; i < 91; i++)
                 {
-                    diccionarioOriginal.Add(Convert.ToString((char)valorMayusculas), contadorDiccionario);
+                     
+                    diccionarioOriginal.Add(i, contadorDiccionario);
                     contadorDiccionario++;
-                    valorMayusculas++;
+
                 }
-                diccionarioOriginal.Add("\r\n", contadorDiccionario + 1);
+                for (int i = 97; i < 123; i++)
+                {
+                     
+                    diccionarioOriginal.Add(i, contadorDiccionario);
+                    contadorDiccionario++;
+
+                }
+                 
                 diccionarioOriginalVacio = false;
             }
 
@@ -78,9 +87,11 @@ namespace lab6.Cesar
             {
                 foreach (var letra in clave)
                 {
-                    if (!diccionarioCifrado.ContainsKey(Convert.ToString(letra)))
+                     
+                    if (!diccionarioCifrado.ContainsKey((letra)))
                     {
-                        diccionarioCifrado.Add(Convert.ToString(letra), contadorDiccionario);
+                         
+                        diccionarioCifrado.Add((letra), contadorDiccionario);
                         contadorDiccionario++;
                     }
                 }
@@ -95,54 +106,11 @@ namespace lab6.Cesar
                 }
             }
         }
+
+
         public void ObtenerTextoArchivoOriginal(string archivoLeido)
         {
             var bufferLength = 10000;
-            using (var stream = new FileStream(archivoLeido, FileMode.Open))
-            {
-                using (var reader = new BinaryReader(stream))
-                {
-                    var byteBuffer = new byte[bufferLength];
-                    //el buffer de lectura de archivo se utiliza indirectamente para la escritura del nuevo archivo tambien
-                    while (reader.BaseStream.Position != reader.BaseStream.Length)
-                    {
-                        byteBuffer = reader.ReadBytes(bufferLength);
-                        CifrarTexto(byteBuffer);
-                    }
-                }
-            }
-        }
-        public void ObtenerTextoArchivoDecifrado(string archivoLeido)
-        {
-            var bufferLength = 10000;
-            var texto = string.Empty;
-            using (var stream = new FileStream(archivoLeido, FileMode.Open))
-            {
-                using (var reader = new BinaryReader(stream))
-                {
-                    var byteBuffer = new byte[bufferLength];
-                    //el buffer de lectura de archivo se utiliza indirectamente para la escritura del nuevo archivo tambien
-                    while (reader.BaseStream.Position != reader.BaseStream.Length)
-                    {
-                        byteBuffer = reader.ReadBytes(bufferLength);
-
-                        DecifrarTexto(byteBuffer);
-                    }
-                }
-            }
-        }
-        private void CifrarTexto(byte[] byteBuffer)
-        {
-            var texto = string.Empty;
-            foreach (char letra in byteBuffer)
-            {
-                //se realiza la conversión de los caracteres 
-                var receptorValorOriginal = diccionarioOriginal.LastOrDefault(x => x.Key == Convert.ToString(letra)).Value;
-                var receptorValorCifrado = diccionarioCifrado.LastOrDefault(x => x.Value == receptorValorOriginal).Key;
-                if (receptorValorOriginal == 0) { receptorValorCifrado = Convert.ToString(letra); }
-
-                texto += receptorValorCifrado;
-            }
 
             string CarpetaCompress = Environment.CurrentDirectory;
 
@@ -150,38 +118,63 @@ namespace lab6.Cesar
             {
                 Directory.CreateDirectory(Path.Combine(CarpetaCompress, "CipherCesar2"));
             }
-             
 
-            using (var writeStream = new FileStream(Path.Combine(CarpetaCompress, "CipherCesar2", $"{RutaUsuario}.txt  "), FileMode.OpenOrCreate))
+            using (var writeStream = new FileStream(Path.Combine(CarpetaCompress, "CipherCesar2", $"{RutaUsuario}.txt"), FileMode.OpenOrCreate))
             {
                 using (var writer = new BinaryWriter(writeStream))
                 {
-                    writer.Seek(0, SeekOrigin.End);
-                    writer.Write(System.Text.Encoding.Unicode.GetBytes(texto));
+                    using (var stream = new FileStream(archivoLeido, FileMode.Open))
+                    {
+                        using (var reader = new BinaryReader(stream))
+                        {
+                            var byteBuffer = new byte[bufferLength];
+                            //el buffer de lectura de archivo se utiliza indirectamente para la escritura del nuevo archivo tambien
+                            while (reader.BaseStream.Position != reader.BaseStream.Length)
+                            {
+                                byteBuffer = reader.ReadBytes(bufferLength);
+
+                                var texto = new List<int>();
+                                foreach (var letra in byteBuffer)
+                                {
+                                    int receptorValorOriginal;
+                                    int receptorValorCifrado;
+
+                                    if (diccionarioOriginal.ContainsKey(letra))
+                                    {
+                                        receptorValorOriginal = diccionarioOriginal.LastOrDefault(x => x.Key == (letra)).Value;
+                                        receptorValorCifrado = diccionarioCifrado.LastOrDefault(x => x.Value == receptorValorOriginal).Key;
+                                        if (receptorValorOriginal == 0) { receptorValorCifrado = (letra); }
+
+                                    }
+                                    else
+                                    {
+                                        receptorValorCifrado = letra;
+                                    }
+
+
+                                    texto.Add(receptorValorCifrado);
+                                }
+                                foreach (var item in texto)
+                                {
+                                    writer.Write(Convert.ToByte(Convert.ToChar(item)));
+                                }
+                            }
+                        }
+                    }
 
                 }
             }
+
+
+
         }
-        private void DecifrarTexto(byte[] byteBuffer)
+
+
+
+
+        public void ObtenerTextoArchivoDecifrado(string archivoLeido)
         {
-            var texto = string.Empty;
-            foreach (char letra in byteBuffer)
-            {
-                //se realiza la conversión de los caracteres 
-                var receptorValorCifrado = diccionarioCifrado.LastOrDefault(x => x.Key == Convert.ToString(letra)).Value;
-                var receptorValorDecifrado = diccionarioOriginal.LastOrDefault(x => x.Value == receptorValorCifrado).Key;
-                if (receptorValorDecifrado == "\0")
-                {
-                    receptorValorDecifrado = Convert.ToString(letra);
-                }
-                if (receptorValorDecifrado == "\r")
-                {
-                    receptorValorDecifrado = diccionarioOriginal.LastOrDefault(x => x.Value == receptorValorCifrado).Key;
-                }
-
-                texto += receptorValorDecifrado;
-            }
-
+            var bufferLength = 10000;
 
             string CarpetaCompress = Environment.CurrentDirectory;
 
@@ -191,19 +184,56 @@ namespace lab6.Cesar
             }
 
 
+
+
             using (var writeStream = new FileStream(Path.Combine(CarpetaCompress, "DecipherCesar2", $"{RutaUsuario}.txt  "), FileMode.OpenOrCreate))
             {
                 using (var writer = new BinaryWriter(writeStream))
                 {
-                    foreach (var item in texto)
+                    using (var stream = new FileStream(archivoLeido, FileMode.Open))
                     {
-                        writer.Write(item);
+                        using (var reader = new BinaryReader(stream))
+                        {
+                            var byteBuffer = new byte[bufferLength];
+                            //el buffer de lectura de archivo se utiliza indirectamente para la escritura del nuevo archivo tambien
+                            while (reader.BaseStream.Position != reader.BaseStream.Length)
+                            {
+                                byteBuffer = reader.ReadBytes(bufferLength);
+
+                                var texto = new List<int>();
+                                var textoverificacion = string.Empty;
+
+                                int receptorValorCifrado;
+                                int receptorValorDecifrado;
+                                foreach (var letra in byteBuffer)
+                                {
+                                    if (diccionarioCifrado.ContainsKey(letra))
+                                    {
+                                        receptorValorCifrado = diccionarioCifrado.LastOrDefault(x => x.Key == (letra)).Value;
+                                        receptorValorDecifrado = diccionarioOriginal.LastOrDefault(x => x.Value == receptorValorCifrado).Key;
+
+                                    }
+                                    else
+                                    {
+                                        receptorValorDecifrado = letra;
+                                    }
+
+                                    textoverificacion += Convert.ToString(Convert.ToChar(receptorValorDecifrado));
+                                    texto.Add(receptorValorDecifrado);
+                                }
+                                foreach (var item in texto)
+                                {
+                                    writer.Write(Convert.ToByte(Convert.ToChar(item)));
+                                }
+
+                            }
+                        }
                     }
                 }
             }
+
+
         }
-
-
-
+         
     }
 }

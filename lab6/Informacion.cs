@@ -10,6 +10,7 @@ namespace lab6
         public string RutaLlave { get; set; }
         public string RutaArchivo { get; set; }
         public string NombreArchivo { get; set; }
+        public int key { get; set; }
 
     }
 }

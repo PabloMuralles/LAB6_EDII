@@ -15,7 +15,7 @@ namespace lab6.Controllers
 
         [HttpGet]
         [Route("cipher/getPublicKey")]
-        public ActionResult<string> Insertar( int key)
+        public ActionResult<string> Insertar([FromBody] Informacion Info)
         {
             if (ModelState.IsValid)
             {
@@ -29,18 +29,7 @@ namespace lab6.Controllers
             return BadRequest(ModelState);
         }
 
-        //[HttpPost]
-        //[Route("cipher/caesar2")]
-        //public ActionResult Insertar([FromBody] RSA.Informacion info)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var contraseña = RSA.Descifrar.Instance.DecifrarContraseña(info.contraseña);
-        //        return Ok();
-        //    }
-        //    return BadRequest(ModelState);
-        //}
-
+        
         [HttpPost]
         [Route("cipher/caesar2")]
         public ActionResult Cipher([FromBody] Informacion Info)

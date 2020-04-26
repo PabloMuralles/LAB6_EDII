@@ -62,9 +62,9 @@ namespace lab6.RSA
                 d = CalcularD(Phe, e);
             }
 
-            Llaves = $"RSA: (Llave Publica: {n}, {e}) y (Llave Privada: {n}, {d}) , {p}, {q} ";
+            //Llaves = $"RSA: (Llave Publica: {n}, {e}) y (Llave Privada: {n}, {d}) , {p}, {q} ";
 
-            //Llaves = $"RSA: Llave Publica: {n}, {e}  ";
+            Llaves = $"RSA: Llave Publica: {n}, {e}  ";
 
             Descifrar.Instance.RecibirLlavePrivada(n, d);
 

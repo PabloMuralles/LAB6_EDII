@@ -8,7 +8,7 @@ namespace CifrarLlaveCliente
         static void Main(string[] args)
         {
             
-            Console.WriteLine("Igrese el primer numoer de su llave");
+            Console.WriteLine("Igrese el primer numero de su llave");
             string n_ = Console.ReadLine();
             BigInteger n = BigInteger.Parse(n_);
             Console.WriteLine("Igrese el segundo numero de su llave");
@@ -23,7 +23,7 @@ namespace CifrarLlaveCliente
             Console.WriteLine( @"Su clave cifrada es: "+ "\"" +Cifrar.Cifrar2(n,de,LlaveBytes)+"\"");
             Console.WriteLine("Tomar unicamente lo que esta dentro de las comillas ");
             Console.WriteLine(" ");
-            Console.WriteLine("Ingrese 1 para repetir proceso o 0 para salir, repita el proceso con otra llave o contraseña para si le sale un caracter no reconocible");
+            Console.WriteLine("Ingrese 1 para repetir proceso o 0 para salir");
             string x = Console.ReadLine();
             while (x == "1")
             {
@@ -42,7 +42,7 @@ namespace CifrarLlaveCliente
                 Console.WriteLine(@"Su clave cifrada es: " + "\"" + Cifrar.Cifrar2(n, de, LlaveBytes) + "\"");
                 Console.WriteLine("Tomar unicamente lo que esta dentro de las comillas ");
                 Console.WriteLine(" ");
-                Console.WriteLine("Ingrese 1 para repetir proceso o 0 para salirrepita el proceso con otra llave o contraseña para si le sale un caracter no reconocible");
+                Console.WriteLine("Ingrese 1 para repetir proceso o 0 para salir" );
                  x = Console.ReadLine();
             }
 
